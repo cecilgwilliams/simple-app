@@ -41,4 +41,17 @@ public class StoryController {
         stories.remove(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @GetMapping("/reset")
+    public ResponseEntity<Story> reset(){
+        stories.clear();
+        counter = 1;
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/clear")
+    public ResponseEntity<Story> clear(){
+        stories.clear();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
