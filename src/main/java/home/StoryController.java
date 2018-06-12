@@ -10,17 +10,20 @@ import java.util.*;
 @RequestMapping("/stories")
 public class StoryController {
 
-    private long counter = 1;
-    private Map<Long, Story> stories = new HashMap<>();
+    private StoryRepository storyRepo;
+
+    public StoryController(StoryRepository storyRepo) {
+        this.storyRepo = storyRepo;
+    }
 
     @GetMapping
     public ResponseEntity<List<Story>> list() {
-        return new ResponseEntity<>(new ArrayList<>(stories.values()), HttpStatus.OK);
+        return new ResponseEntity<>(storyRepo.list(), HttpStatus.OK);
     }
 
     @GetMapping("{id}")
     public ResponseEntity<Story> read(@PathVariable Long id) {
-        Story story = stories.get(id);
+        Story story = storyRepo.find(id);
         if (story != null) {
             return new ResponseEntity<>(story, HttpStatus.OK);
         } else {
@@ -30,28 +33,13 @@ public class StoryController {
 
     @PostMapping
     public ResponseEntity<Story> createStory(@RequestBody Story story){
-        story.setId(counter);
-        stories.put(counter, story);
-        counter++;
-        return new ResponseEntity<>(story, HttpStatus.CREATED);
+        Story createdStory = storyRepo.create(story);
+        return new ResponseEntity<>(createdStory, HttpStatus.CREATED);
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<Story> delete(@PathVariable Long id) {
-        stories.remove(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @GetMapping("/reset")
-    public ResponseEntity<Story> reset(){
-        stories.clear();
-        counter = 1;
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @GetMapping("/clear")
-    public ResponseEntity<Story> clear(){
-        stories.clear();
+        storyRepo.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
