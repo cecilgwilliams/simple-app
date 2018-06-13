@@ -49,6 +49,18 @@ public class StoryRepository {
                 extractor);
     }
 
+    public Story update(Long id, Story story) {
+        jdbcTemplate.update("UPDATE backlog " +
+                        "SET project_id = ?, name = ?, info = ? " +
+                        "WHERE id = ?",
+                story.getProjectId(),
+                story.getName(),
+                story.getInfo(),
+                id);
+
+        return find(id);
+    }
+
     public List<Story> list() {
         return jdbcTemplate.query("SELECT id, project_id, name, info FROM backlog", mapper);
     }

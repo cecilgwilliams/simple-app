@@ -31,6 +31,16 @@ public class StoryController {
         }
     }
 
+    @PutMapping("{id}")
+    public ResponseEntity<Story> update(@PathVariable Long id, @RequestBody Story story) {
+        Story updatedStory = storyRepo.update(id, story);
+        if (updatedStory != null) {
+            return new ResponseEntity<>(updatedStory, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @PostMapping
     public ResponseEntity<Story> createStory(@RequestBody Story story){
         Story createdStory = storyRepo.create(story);
